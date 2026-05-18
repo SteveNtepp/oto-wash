@@ -46,33 +46,110 @@
       linear-gradient(135deg,#071018 0%,#0F172A 45%,#0F4C5C 100%);
     }
 
-    /* SIDEBAR - Responsive amélioré */
-    .sidebar{
+    /* SIDEBAR STYLES */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
       width: 280px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      transform: translateX(0);
+      height: 100%;
       z-index: 1000;
+      transition: transform 0.3s ease;
     }
 
-    .sidebar.collapsed{
-      width: 80px;
+    /* Overlay */
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
 
-    .sidebar.collapsed .sidebar-text,
-    .sidebar.collapsed .logo-text {
-      display: none;
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
     }
 
-    .sidebar.collapsed nav a span:not(.icon-only) {
-      display: none;
+    /* Desktop styles */
+    @media (min-width: 1025px) {
+      .sidebar {
+        transform: translateX(0) !important;
+      }
+      .sidebar.collapsed {
+        width: 80px;
+      }
+      .sidebar.collapsed .sidebar-text,
+      .sidebar.collapsed .logo-text {
+        display: none;
+      }
+      .sidebar.collapsed nav a span {
+        display: none;
+      }
+      .sidebar.collapsed .flex.items-center.justify-between {
+        justify-content: center;
+      }
+      .main-content {
+        margin-left: 280px;
+        transition: margin-left 0.3s ease;
+        width: calc(100% - 280px);
+      }
+      .main-content.sidebar-collapsed {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+      }
+      .mobile-menu-btn {
+        display: none !important;
+      }
+      .close-sidebar-btn {
+        display: none !important;
+      }
     }
 
-    .sidebar.collapsed .flex.items-center.justify-between {
+    /* Mobile styles */
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+      .mobile-menu-btn {
+        display: flex !important;
+      }
+      .close-sidebar-btn {
+        display: flex !important;
+      }
+    }
+
+    .mobile-menu-btn {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1001;
+      background: rgba(20,184,166,0.95);
+      border-radius: 12px;
+      padding: 0.5rem;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px);
+      align-items: center;
       justify-content: center;
     }
 
-    .sidebar.collapsed .flex.items-center.gap-3 {
-      justify-content: center;
+    .close-sidebar-btn {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .close-sidebar-btn:hover {
+      opacity: 0.7;
     }
 
     .sidebar-link{
@@ -81,22 +158,9 @@
       white-space: nowrap;
     }
 
-    .sidebar.collapsed .sidebar-link {
-      justify-content: center;
-      padding: 0.75rem;
-    }
-
-    .sidebar.collapsed .sidebar-link i {
-      margin: 0;
-    }
-
     .sidebar-link:hover{
       transform:translateX(4px);
       background:rgba(20,184,166,0.12);
-    }
-
-    .sidebar.collapsed .sidebar-link:hover {
-      transform: translateX(0);
     }
 
     .sidebar-link.active{
@@ -115,66 +179,6 @@
       background:#14B8A6;
     }
 
-    /* MAIN CONTENT - Ajustement dynamique */
-    .main-content {
-      margin-left: 280px;
-      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      width: calc(100% - 280px);
-    }
-
-    .main-content.sidebar-collapsed {
-      margin-left: 80px;
-      width: calc(100% - 80px);
-    }
-
-    /* Overlay pour mobile */
-    .sidebar-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      z-index: 999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .sidebar-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    /* Responsive Breakpoints */
-    @media (max-width: 1024px) {
-      .sidebar {
-        position: fixed;
-        left: -280px;
-        top: 0;
-        height: 100%;
-        transform: translateX(0);
-      }
-      
-      .sidebar.mobile-open {
-        left: 0;
-      }
-      
-      .main-content {
-        margin-left: 0 !important;
-        width: 100% !important;
-      }
-      
-      /* Empêcher le scroll quand la sidebar est ouverte */
-      body.sidebar-open {
-        overflow: hidden;
-      }
-    }
-
-    @media (min-width: 1025px) {
-      .toggle-sidebar-mobile {
-        display: none;
-      }
-    }
-
     .floating{
       animation:float 6s ease-in-out infinite;
     }
@@ -182,10 +186,6 @@
     @keyframes float{
       0%,100%{transform:translateY(0)}
       50%{transform:translateY(-10px)}
-    }
-
-    .glow{
-      box-shadow:0 0 60px rgba(20,184,166,.15);
     }
 
     .reveal{
@@ -227,10 +227,6 @@
       mask-composite:exclude;
     }
 
-    .number{
-      font-feature-settings:"tnum";
-    }
-
     .timeline-line{
       background:linear-gradient(to right,#14B8A6,#0F4C5C);
       height:4px;
@@ -269,55 +265,15 @@
       .pricing-popular {
         transform: scale(1);
       }
-      
       .timeline-line {
         display: none;
       }
-      
       section {
         padding-left: 1rem !important;
         padding-right: 1rem !important;
       }
-      
       h2 {
         font-size: 2rem !important;
-      }
-    }
-
-    /* Bouton toggle sidebar */
-    .toggle-btn {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 1001;
-      background: rgba(20,184,166,0.95);
-      border-radius: 12px;
-      padding: 0.5rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: 1px solid rgba(255,255,255,0.2);
-      backdrop-filter: blur(4px);
-    }
-
-    .toggle-btn:hover {
-      background: rgba(20,184,166,1);
-      transform: scale(1.05);
-    }
-
-    @media (min-width: 1025px) {
-      .toggle-btn {
-        display: none;
-      }
-    }
-
-    /* Bouton fermeture dans la sidebar */
-    .close-sidebar-btn {
-      display: none;
-    }
-
-    @media (max-width: 1024px) {
-      .close-sidebar-btn {
-        display: block;
       }
     }
   </style>
@@ -325,13 +281,17 @@
 
 <body class="mesh">
 
-<!-- Mobile Toggle Button -->
-<button class="toggle-btn" onclick="openMobileSidebar()">
-  <i data-lucide="menu"></i>
+<!-- Mobile Menu Button (Hamburger) -->
+<button class="mobile-menu-btn" id="mobileMenuBtn">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="4" x2="20" y1="12" y2="12"/>
+    <line x1="4" x2="20" y1="6" y2="6"/>
+    <line x1="4" x2="20" y1="18" y2="18"/>
+  </svg>
 </button>
 
 <!-- Sidebar Overlay -->
-<div class="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <div class="flex min-h-screen relative">
   <!-- SIDEBAR -->
@@ -346,61 +306,64 @@
           <p class="text-xs text-slate-400">Strategic Report</p>
         </div>
       </div>
-      <!-- Bouton de fermeture pour desktop (collapse) -->
-      <button onclick="toggleSidebar()" class="text-slate-300 hidden lg:block">
+      <!-- Bouton collapse desktop -->
+      <button id="collapseDesktopBtn" class="text-slate-300 hidden lg:block hover:text-white transition">
         <i data-lucide="panel-left-close"></i>
       </button>
-      <!-- Bouton de fermeture pour mobile (X) -->
-      <button onclick="closeMobileSidebar()" class="close-sidebar-btn text-slate-300 hover:text-white transition">
-        <i data-lucide="x"></i>
+      <!-- Bouton fermeture mobile -->
+      <button id="closeSidebarBtn" class="close-sidebar-btn text-white transition" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" x2="6" y1="6" y2="18"/>
+          <line x1="6" x2="18" y1="6" y2="18"/>
+        </svg>
       </button>
     </div>
 
     <nav class="space-y-3 text-sm">
-      <a href="#hero" class="sidebar-link active flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#hero" class="sidebar-link active flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="sparkles"></i>
         <span class="sidebar-text">Overview</span>
       </a>
-      <a href="#dashboard" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#dashboard" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="layout-dashboard"></i>
         <span class="sidebar-text">Executive Dashboard</span>
       </a>
-      <a href="#market" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#market" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="line-chart"></i>
         <span class="sidebar-text">Market Analysis</span>
       </a>
-      <a href="#swot" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#swot" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="shield-check"></i>
         <span class="sidebar-text">SWOT</span>
       </a>
-      <a href="#pricing" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#pricing" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="badge-dollar-sign"></i>
         <span class="sidebar-text">Pricing</span>
       </a>
-      <a href="#business" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#business" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="briefcase-business"></i>
         <span class="sidebar-text">Business Model</span>
       </a>
-      <a href="#supply" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#supply" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="ship"></i>
         <span class="sidebar-text">Supply Chain</span>
       </a>
-      <a href="#financial" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#financial" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="banknote"></i>
         <span class="sidebar-text">Financials</span>
       </a>
-      <a href="#roadmap" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#roadmap" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="route"></i>
         <span class="sidebar-text">Roadmap</span>
       </a>
-      <a href="#recommendations" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" onclick="closeMobileSidebar()">
+      <a href="#recommendations" class="sidebar-link flex items-center gap-3 p-3 rounded-xl" data-link="true">
         <i data-lucide="lightbulb"></i>
         <span class="sidebar-text">Recommendations</span>
       </a>
     </nav>
   </aside>
 
-  <!-- MAIN -->
+  <!-- MAIN CONTENT -->
   <main id="mainContent" class="main-content w-full">
     <!-- HERO SECTION -->
     <section id="hero" class="hero-gradient min-h-screen relative overflow-hidden">
@@ -477,83 +440,12 @@
         </div>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <div class="flex justify-between items-start mb-6">
-              <div>
-                <p class="text-slate-400 mb-2 text-sm">Investissement Initial</p>
-                <h3 class="text-3xl md:text-4xl font-black">35,8M</h3>
-              </div>
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/15 flex items-center justify-center">
-                <i data-lucide="landmark" class="w-5 h-5 md:w-6 md:h-6"></i>
-              </div>
-            </div>
-            <p class="text-slate-300 text-sm md:text-base">Infrastructure automatisée premium avec système de recyclage biologique intégré.</p>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <div class="flex justify-between items-start mb-6">
-              <div>
-                <p class="text-slate-400 mb-2 text-sm">EBITDA</p>
-                <h3 class="text-3xl md:text-4xl font-black text-teal-300">23,3M</h3>
-              </div>
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/15 flex items-center justify-center">
-                <i data-lucide="bar-chart-3" class="w-5 h-5 md:w-6 md:h-6"></i>
-              </div>
-            </div>
-            <p class="text-slate-300 text-sm md:text-base">Marge opérationnelle robuste soutenue par l'automatisation et le volume.</p>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <div class="flex justify-between items-start mb-6">
-              <div>
-                <p class="text-slate-400 mb-2 text-sm">Point Mort</p>
-                <h3 class="text-3xl md:text-4xl font-black">18</h3>
-              </div>
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-blue-500/15 flex items-center justify-center">
-                <i data-lucide="target" class="w-5 h-5 md:w-6 md:h-6"></i>
-              </div>
-            </div>
-            <p class="text-slate-300 text-sm md:text-base">Véhicules/jour nécessaires pour atteindre le seuil de rentabilité.</p>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <div class="flex justify-between items-start mb-6">
-              <div>
-                <p class="text-slate-400 mb-2 text-sm">Marge Nette</p>
-                <h3 class="text-3xl md:text-4xl font-black">20-35%</h3>
-              </div>
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/15 flex items-center justify-center">
-                <i data-lucide="badge-percent" class="w-5 h-5 md:w-6 md:h-6"></i>
-              </div>
-            </div>
-            <p class="text-slate-300 text-sm md:text-base">Structure de coûts optimisée via recyclage hydrique et automatisation.</p>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <div class="flex justify-between items-start mb-6">
-              <div>
-                <p class="text-slate-400 mb-2 text-sm">Cycle de Lavage</p>
-                <h3 class="text-3xl md:text-4xl font-black">3-5 min</h3>
-              </div>
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/15 flex items-center justify-center">
-                <i data-lucide="timer" class="w-5 h-5 md:w-6 md:h-6"></i>
-              </div>
-            </div>
-            <p class="text-slate-300 text-sm md:text-base">Technologie Touchless 360° avec traitement rapide haute pression.</p>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <div class="flex justify-between items-start mb-6">
-              <div>
-                <p class="text-slate-400 mb-2 text-sm">Consommation Eau</p>
-                <h3 class="text-3xl md:text-4xl font-black text-teal-300">-90%</h3>
-              </div>
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/15 flex items-center justify-center">
-                <i data-lucide="droplets" class="w-5 h-5 md:w-6 md:h-6"></i>
-              </div>
-            </div>
-            <p class="text-slate-300 text-sm md:text-base">Circuit fermé de recyclage compatible exigences environnementales ONAS.</p>
-          </div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><div class="flex justify-between items-start mb-6"><div><p class="text-slate-400 mb-2 text-sm">Investissement Initial</p><h3 class="text-3xl md:text-4xl font-black">35,8M</h3></div><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/15 flex items-center justify-center"><i data-lucide="landmark" class="w-5 h-5 md:w-6 md:h-6"></i></div></div><p class="text-slate-300 text-sm md:text-base">Infrastructure automatisée premium avec système de recyclage biologique intégré.</p></div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><div class="flex justify-between items-start mb-6"><div><p class="text-slate-400 mb-2 text-sm">EBITDA</p><h3 class="text-3xl md:text-4xl font-black text-teal-300">23,3M</h3></div><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/15 flex items-center justify-center"><i data-lucide="bar-chart-3" class="w-5 h-5 md:w-6 md:h-6"></i></div></div><p class="text-slate-300 text-sm md:text-base">Marge opérationnelle robuste soutenue par l'automatisation et le volume.</p></div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><div class="flex justify-between items-start mb-6"><div><p class="text-slate-400 mb-2 text-sm">Point Mort</p><h3 class="text-3xl md:text-4xl font-black">18</h3></div><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-blue-500/15 flex items-center justify-center"><i data-lucide="target" class="w-5 h-5 md:w-6 md:h-6"></i></div></div><p class="text-slate-300 text-sm md:text-base">Véhicules/jour nécessaires pour atteindre le seuil de rentabilité.</p></div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><div class="flex justify-between items-start mb-6"><div><p class="text-slate-400 mb-2 text-sm">Marge Nette</p><h3 class="text-3xl md:text-4xl font-black">20-35%</h3></div><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/15 flex items-center justify-center"><i data-lucide="badge-percent" class="w-5 h-5 md:w-6 md:h-6"></i></div></div><p class="text-slate-300 text-sm md:text-base">Structure de coûts optimisée via recyclage hydrique et automatisation.</p></div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><div class="flex justify-between items-start mb-6"><div><p class="text-slate-400 mb-2 text-sm">Cycle de Lavage</p><h3 class="text-3xl md:text-4xl font-black">3-5 min</h3></div><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/15 flex items-center justify-center"><i data-lucide="timer" class="w-5 h-5 md:w-6 md:h-6"></i></div></div><p class="text-slate-300 text-sm md:text-base">Technologie Touchless 360° avec traitement rapide haute pression.</p></div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><div class="flex justify-between items-start mb-6"><div><p class="text-slate-400 mb-2 text-sm">Consommation Eau</p><h3 class="text-3xl md:text-4xl font-black text-teal-300">-90%</h3></div><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/15 flex items-center justify-center"><i data-lucide="droplets" class="w-5 h-5 md:w-6 md:h-6"></i></div></div><p class="text-slate-300 text-sm md:text-base">Circuit fermé de recyclage compatible exigences environnementales ONAS.</p></div>
         </div>
       </div>
     </section>
@@ -561,57 +453,10 @@
     <!-- MARKET -->
     <section id="market" class="py-16 md:py-24 px-4 md:px-8 bg-[#09131d]">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 md:mb-16">
-          <p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Market Intelligence</p>
-          <h2 class="text-3xl md:text-5xl font-black mb-5">Dakar Automotive Ecosystem</h2>
-        </div>
-
+        <div class="mb-12 md:mb-16"><p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Market Intelligence</p><h2 class="text-3xl md:text-5xl font-black mb-5">Dakar Automotive Ecosystem</h2></div>
         <div class="grid lg:grid-cols-2 gap-8 md:gap-10 mb-12">
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <div class="flex items-center gap-3 mb-6 md:mb-8">
-              <i data-lucide="car-front"></i>
-              <h3 class="text-xl md:text-2xl font-bold">Market Share — Sénégal 2024</h3>
-            </div>
-            <canvas id="marketChart" style="max-height: 300px;"></canvas>
-          </div>
-
-          <div class="grid gap-6">
-            <div class="glass rounded-3xl p-6 md:p-7 card-hover reveal">
-              <div class="flex items-start gap-4 md:gap-5">
-                <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center flex-shrink-0">
-                  <i data-lucide="building-2"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Urbanisation Accélérée</h4>
-                  <p class="text-slate-300 text-sm md:text-base">Dakar concentre les flux économiques et développe de nouveaux pôles premium à forte densité automobile.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="glass rounded-3xl p-6 md:p-7 card-hover reveal">
-              <div class="flex items-start gap-4 md:gap-5">
-                <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
-                  <i data-lucide="truck"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Croissance SUV & Pick-Ups</h4>
-                  <p class="text-slate-300 text-sm md:text-base">Toyota Hilux et Mitsubishi L200 dominent un segment exigeant en entretien et protection carrosserie.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="glass rounded-3xl p-6 md:p-7 card-hover reveal">
-              <div class="flex items-start gap-4 md:gap-5">
-                <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center flex-shrink-0">
-                  <i data-lucide="waves"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Corrosion Marine</h4>
-                  <p class="text-slate-300 text-sm md:text-base">Le sel marin et l'Harmattan créent une demande structurelle pour des lavages haute pression et châssis.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><div class="flex items-center gap-3 mb-6 md:mb-8"><i data-lucide="car-front"></i><h3 class="text-xl md:text-2xl font-bold">Market Share — Sénégal 2024</h3></div><canvas id="marketChart" style="max-height: 300px;"></canvas></div>
+          <div class="grid gap-6"><div class="glass rounded-3xl p-6 md:p-7 card-hover reveal"><div class="flex items-start gap-4 md:gap-5"><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center flex-shrink-0"><i data-lucide="building-2"></i></div><div><h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Urbanisation Accélérée</h4><p class="text-slate-300 text-sm md:text-base">Dakar concentre les flux économiques et développe de nouveaux pôles premium à forte densité automobile.</p></div></div></div><div class="glass rounded-3xl p-6 md:p-7 card-hover reveal"><div class="flex items-start gap-4 md:gap-5"><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0"><i data-lucide="truck"></i></div><div><h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Croissance SUV & Pick-Ups</h4><p class="text-slate-300 text-sm md:text-base">Toyota Hilux et Mitsubishi L200 dominent un segment exigeant en entretien et protection carrosserie.</p></div></div></div><div class="glass rounded-3xl p-6 md:p-7 card-hover reveal"><div class="flex items-start gap-4 md:gap-5"><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center flex-shrink-0"><i data-lucide="waves"></i></div><div><h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Corrosion Marine</h4><p class="text-slate-300 text-sm md:text-base">Le sel marin et l'Harmattan créent une demande structurelle pour des lavages haute pression et châssis.</p></div></div></div></div>
         </div>
       </div>
     </section>
@@ -619,71 +464,12 @@
     <!-- SWOT -->
     <section id="swot" class="py-16 md:py-24 px-4 md:px-8">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 md:mb-16">
-          <p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Strategic Positioning</p>
-          <h2 class="text-3xl md:text-5xl font-black">SWOT Strategic Matrix</h2>
-        </div>
-
+        <div class="mb-12 md:mb-16"><p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Strategic Positioning</p><h2 class="text-3xl md:text-5xl font-black">SWOT Strategic Matrix</h2></div>
         <div class="grid md:grid-cols-2 gap-6 md:gap-8">
-          <div class="glass rounded-3xl p-6 md:p-8 border border-emerald-400/20 hover:border-emerald-400/50 transition">
-            <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
-                <i data-lucide="shield-check"></i>
-              </div>
-              <h3 class="text-2xl md:text-3xl font-black text-emerald-300">Forces</h3>
-            </div>
-            <ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base">
-              <li>• Technologie Touchless 360°</li>
-              <li>• Cycles rapides 3-5 minutes</li>
-              <li>• Recyclage eau jusqu'à 90%</li>
-              <li>• Qualité standardisée premium</li>
-            </ul>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 border border-red-400/20 hover:border-red-400/50 transition">
-            <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-red-500/10 flex items-center justify-center">
-                <i data-lucide="triangle-alert"></i>
-              </div>
-              <h3 class="text-2xl md:text-3xl font-black text-red-300">Faiblesses</h3>
-            </div>
-            <ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base">
-              <li>• CAPEX élevé</li>
-              <li>• Dépendance technique</li>
-              <li>• Maintenance spécialisée</li>
-              <li>• Coûts énergétiques importants</li>
-            </ul>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 border border-cyan-400/20 hover:border-cyan-400/50 transition">
-            <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
-                <i data-lucide="rocket"></i>
-              </div>
-              <h3 class="text-2xl md:text-3xl font-black text-cyan-300">Opportunités</h3>
-            </div>
-            <ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base">
-              <li>• Explosion des VTC</li>
-              <li>• Incitations APIX</li>
-              <li>• Paiements digitaux</li>
-              <li>• Réglementation environnementale</li>
-            </ul>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 border border-orange-400/20 hover:border-orange-400/50 transition">
-            <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center">
-                <i data-lucide="flame"></i>
-              </div>
-              <h3 class="text-2xl md:text-3xl font-black text-orange-300">Menaces</h3>
-            </div>
-            <ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base">
-              <li>• Secteur informel agressif</li>
-              <li>• Hausse tarifs SENELEC</li>
-              <li>• Pression foncière Dakar</li>
-              <li>• Guerre des prix</li>
-            </ul>
-          </div>
+          <div class="glass rounded-3xl p-6 md:p-8 border border-emerald-400/20 hover:border-emerald-400/50 transition"><div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8"><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center"><i data-lucide="shield-check"></i></div><h3 class="text-2xl md:text-3xl font-black text-emerald-300">Forces</h3></div><ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base"><li>• Technologie Touchless 360°</li><li>• Cycles rapides 3-5 minutes</li><li>• Recyclage eau jusqu'à 90%</li><li>• Qualité standardisée premium</li></ul></div>
+          <div class="glass rounded-3xl p-6 md:p-8 border border-red-400/20 hover:border-red-400/50 transition"><div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8"><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-red-500/10 flex items-center justify-center"><i data-lucide="triangle-alert"></i></div><h3 class="text-2xl md:text-3xl font-black text-red-300">Faiblesses</h3></div><ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base"><li>• CAPEX élevé</li><li>• Dépendance technique</li><li>• Maintenance spécialisée</li><li>• Coûts énergétiques importants</li></ul></div>
+          <div class="glass rounded-3xl p-6 md:p-8 border border-cyan-400/20 hover:border-cyan-400/50 transition"><div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8"><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center"><i data-lucide="rocket"></i></div><h3 class="text-2xl md:text-3xl font-black text-cyan-300">Opportunités</h3></div><ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base"><li>• Explosion des VTC</li><li>• Incitations APIX</li><li>• Paiements digitaux</li><li>• Réglementation environnementale</li></ul></div>
+          <div class="glass rounded-3xl p-6 md:p-8 border border-orange-400/20 hover:border-orange-400/50 transition"><div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8"><div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center"><i data-lucide="flame"></i></div><h3 class="text-2xl md:text-3xl font-black text-orange-300">Menaces</h3></div><ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base"><li>• Secteur informel agressif</li><li>• Hausse tarifs SENELEC</li><li>• Pression foncière Dakar</li><li>• Guerre des prix</li></ul></div>
         </div>
       </div>
     </section>
@@ -691,48 +477,11 @@
     <!-- PRICING -->
     <section id="pricing" class="py-16 md:py-24 px-4 md:px-8 bg-[#09131d]">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 md:mb-16 text-center">
-          <p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Pricing Strategy</p>
-          <h2 class="text-3xl md:text-5xl font-black mb-5">Premium Accessible Positioning</h2>
-        </div>
-
+        <div class="mb-12 md:mb-16 text-center"><p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Pricing Strategy</p><h2 class="text-3xl md:text-5xl font-black mb-5">Premium Accessible Positioning</h2></div>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          <div class="glass rounded-3xl p-6 md:p-10 card-hover">
-            <h3 class="text-2xl md:text-3xl font-black mb-4">Express</h3>
-            <div class="text-3xl md:text-5xl font-black mb-6">3k-4k</div>
-            <ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base mb-8 md:mb-10">
-              <li>✓ Lavage extérieur automatique</li>
-              <li>✓ Nettoyage jantes</li>
-              <li>✓ Séchage intelligent</li>
-              <li>✓ Service rapide</li>
-            </ul>
-            <button class="w-full py-3 md:py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition text-sm md:text-base">Fast Wash</button>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-10 pricing-popular relative">
-            <div class="absolute top-3 md:top-5 right-3 md:right-5 px-2 md:px-4 py-1 md:py-2 rounded-full bg-teal-400 text-black text-xs font-black">MOST POPULAR</div>
-            <h3 class="text-2xl md:text-3xl font-black mb-4">Sénégal Confort</h3>
-            <div class="text-3xl md:text-5xl font-black text-teal-300 mb-6">6k-8k</div>
-            <ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base mb-8 md:mb-10">
-              <li>✓ Lavage Express</li>
-              <li>✓ Nettoyage châssis anti-sel</li>
-              <li>✓ Cire premium brillante</li>
-              <li>✓ Aspiration intérieure</li>
-            </ul>
-            <button class="w-full py-3 md:py-4 rounded-2xl bg-gradient-to-r from-teal-400 to-cyan-600 font-bold text-sm md:text-base">Recommended Package</button>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-10 card-hover">
-            <h3 class="text-2xl md:text-3xl font-black mb-4">Grand Nettoyage</h3>
-            <div class="text-3xl md:text-5xl font-black mb-6">12k-15k</div>
-            <ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base mb-8 md:mb-10">
-              <li>✓ Lavage intégral</li>
-              <li>✓ Traitement cuir</li>
-              <li>✓ Shampoing sièges</li>
-              <li>✓ Nettoyage moteur vapeur</li>
-            </ul>
-            <button class="w-full py-3 md:py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition text-sm md:text-base">Premium Care</button>
-          </div>
+          <div class="glass rounded-3xl p-6 md:p-10 card-hover"><h3 class="text-2xl md:text-3xl font-black mb-4">Express</h3><div class="text-3xl md:text-5xl font-black mb-6">3k-4k</div><ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base mb-8 md:mb-10"><li>✓ Lavage extérieur automatique</li><li>✓ Nettoyage jantes</li><li>✓ Séchage intelligent</li><li>✓ Service rapide</li></ul><button class="w-full py-3 md:py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition text-sm md:text-base">Fast Wash</button></div>
+          <div class="glass rounded-3xl p-6 md:p-10 pricing-popular relative"><div class="absolute top-3 md:top-5 right-3 md:right-5 px-2 md:px-4 py-1 md:py-2 rounded-full bg-teal-400 text-black text-xs font-black">MOST POPULAR</div><h3 class="text-2xl md:text-3xl font-black mb-4">Sénégal Confort</h3><div class="text-3xl md:text-5xl font-black text-teal-300 mb-6">6k-8k</div><ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base mb-8 md:mb-10"><li>✓ Lavage Express</li><li>✓ Nettoyage châssis anti-sel</li><li>✓ Cire premium brillante</li><li>✓ Aspiration intérieure</li></ul><button class="w-full py-3 md:py-4 rounded-2xl bg-gradient-to-r from-teal-400 to-cyan-600 font-bold text-sm md:text-base">Recommended Package</button></div>
+          <div class="glass rounded-3xl p-6 md:p-10 card-hover"><h3 class="text-2xl md:text-3xl font-black mb-4">Grand Nettoyage</h3><div class="text-3xl md:text-5xl font-black mb-6">12k-15k</div><ul class="space-y-3 md:space-y-4 text-slate-300 text-sm md:text-base mb-8 md:mb-10"><li>✓ Lavage intégral</li><li>✓ Traitement cuir</li><li>✓ Shampoing sièges</li><li>✓ Nettoyage moteur vapeur</li></ul><button class="w-full py-3 md:py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition text-sm md:text-base">Premium Care</button></div>
         </div>
       </div>
     </section>
@@ -740,51 +489,12 @@
     <!-- BUSINESS MODEL -->
     <section id="business" class="py-16 md:py-24 px-4 md:px-8">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 md:mb-16">
-          <p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Business Architecture</p>
-          <h2 class="text-3xl md:text-5xl font-black">Business Model Canvas</h2>
-        </div>
-
+        <div class="mb-12 md:mb-16"><p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Business Architecture</p><h2 class="text-3xl md:text-5xl font-black">Business Model Canvas</h2></div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          <div class="glass rounded-3xl p-4 md:p-6">
-            <h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">Partenaires Clés</h4>
-            <ul class="space-y-2 md:space-y-3 text-slate-300 text-xs md:text-sm">
-              <li>• APIX</li>
-              <li>• Wave & Orange Money</li>
-              <li>• Fournisseurs chinois</li>
-              <li>• VTC & Flottes</li>
-            </ul>
-          </div>
-
-          <div class="glass rounded-3xl p-4 md:p-6">
-            <h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">Activités</h4>
-            <ul class="space-y-2 md:space-y-3 text-slate-300 text-xs md:text-sm">
-              <li>• Lavage automatisé</li>
-              <li>• Maintenance machine</li>
-              <li>• Gestion qualité</li>
-              <li>• Marketing digital</li>
-            </ul>
-          </div>
-
-          <div class="glass rounded-3xl p-4 md:p-6">
-            <h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">Proposition de Valeur</h4>
-            <ul class="space-y-2 md:space-y-3 text-slate-300 text-xs md:text-sm">
-              <li>• Touchless 360°</li>
-              <li>• Protection carrosserie</li>
-              <li>• Gain de temps</li>
-              <li>• Éco-responsabilité</li>
-            </ul>
-          </div>
-
-          <div class="glass rounded-3xl p-4 md:p-6">
-            <h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">Revenus</h4>
-            <ul class="space-y-2 md:space-y-3 text-slate-300 text-xs md:text-sm">
-              <li>• Forfaits lavage</li>
-              <li>• Abonnements flottes</li>
-              <li>• Services premium</li>
-              <li>• Fidélité digitale</li>
-            </ul>
-          </div>
+          <div class="glass rounded-3xl p-4 md:p-6"><h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">Partenaires Clés</h4><ul class="space-y-2 md:space-y-3 text-slate-300 text-xs md:text-sm"><li>• APIX</li><li>• Wave & Orange Money</li><li>• Fournisseurs chinois</li><li>• VTC & Flottes</li></ul></div>
+          <div class="glass rounded-3xl p-4 md:p-6"><h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">Activités</h4><ul class="space-y-2 md:space-y-3 text-slate-300 text-xs md:text-sm"><li>• Lavage automatisé</li><li>• Maintenance machine</li><li>• Gestion qualité</li><li>• Marketing digital</li></ul></div>
+          <div class="glass rounded-3xl p-4 md:p-6"><h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">Proposition de Valeur</h4><ul class="space-y-2 md:space-y-3 text-slate-300 text-xs md:text-sm"><li>• Touchless 360°</li><li>• Protection carrosserie</li><li>• Gain de temps</li><li>• Éco-responsabilité</li></ul></div>
+          <div class="glass rounded-3xl p-4 md:p-6"><h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">Revenus</h4><ul class="space-y-2 md:space-y-3 text-slate-300 text-xs md:text-sm"><li>• Forfaits lavage</li><li>• Abonnements flottes</li><li>• Services premium</li><li>• Fidélité digitale</li></ul></div>
         </div>
       </div>
     </section>
@@ -792,64 +502,10 @@
     <!-- SUPPLY CHAIN -->
     <section id="supply" class="py-16 md:py-24 px-4 md:px-8 bg-[#09131d]">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 md:mb-16">
-          <p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Supply Chain & Import</p>
-          <h2 class="text-3xl md:text-5xl font-black">China → Dakar Import Strategy</h2>
-        </div>
-
+        <div class="mb-12 md:mb-16"><p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Supply Chain & Import</p><h2 class="text-3xl md:text-5xl font-black">China → Dakar Import Strategy</h2></div>
         <div class="grid lg:grid-cols-2 gap-8 md:gap-10">
-          <div class="glass rounded-3xl p-6 md:p-8">
-            <h3 class="text-xl md:text-2xl font-black mb-6 md:mb-8">Sourcing Premium</h3>
-            <div class="space-y-4 md:space-y-6">
-              <div class="border border-white/10 rounded-2xl p-4 md:p-5">
-                <div class="flex justify-between mb-2 md:mb-3">
-                  <h4 class="font-bold text-sm md:text-base">Touchless 360°</h4>
-                  <span class="text-teal-300 text-sm md:text-base">$13k-15k</span>
-                </div>
-                <p class="text-slate-300 text-xs md:text-sm">Technologie rotative sans contact avec séchage intelligent.</p>
-              </div>
-              <div class="border border-white/10 rounded-2xl p-4 md:p-5">
-                <div class="flex justify-between mb-2 md:mb-3">
-                  <h4 class="font-bold text-sm md:text-base">Portique Premium</h4>
-                  <span class="text-teal-300 text-sm md:text-base">$18k-25k</span>
-                </div>
-                <p class="text-slate-300 text-xs md:text-sm">Cadre galvanisé anti-corrosion et capacité haut volume.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="glass rounded-3xl p-6 md:p-8 relative overflow-hidden">
-            <div class="timeline-line"></div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 relative z-10">
-              <div class="text-center">
-                <div class="w-14 h-14 md:w-20 md:h-20 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                  <i data-lucide="factory" class="w-6 h-6 md:w-8 md:h-8"></i>
-                </div>
-                <h4 class="font-bold text-xs md:text-base">China Factory</h4>
-              </div>
-              <div class="text-center">
-                <div class="w-14 h-14 md:w-20 md:h-20 rounded-full bg-cyan-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                  <i data-lucide="ship" class="w-6 h-6 md:w-8 md:h-8"></i>
-                </div>
-                <h4 class="font-bold text-xs md:text-base">Sea Freight</h4>
-              </div>
-              <div class="text-center">
-                <div class="w-14 h-14 md:w-20 md:h-20 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                  <i data-lucide="building" class="w-6 h-6 md:w-8 md:h-8"></i>
-                </div>
-                <h4 class="font-bold text-xs md:text-base">Customs</h4>
-              </div>
-              <div class="text-center">
-                <div class="w-14 h-14 md:w-20 md:h-20 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                  <i data-lucide="car" class="w-6 h-6 md:w-8 md:h-8"></i>
-                </div>
-                <h4 class="font-bold text-xs md:text-base">Deployment</h4>
-              </div>
-            </div>
-            <div class="mt-8 md:mt-16 text-slate-300 text-xs md:text-sm">
-              <p>Optimisation douanière via agrément APIX permettant une réduction d'environ 30% des coûts d'importation.</p>
-            </div>
-          </div>
+          <div class="glass rounded-3xl p-6 md:p-8"><h3 class="text-xl md:text-2xl font-black mb-6 md:mb-8">Sourcing Premium</h3><div class="space-y-4 md:space-y-6"><div class="border border-white/10 rounded-2xl p-4 md:p-5"><div class="flex justify-between mb-2 md:mb-3"><h4 class="font-bold text-sm md:text-base">Touchless 360°</h4><span class="text-teal-300 text-sm md:text-base">$13k-15k</span></div><p class="text-slate-300 text-xs md:text-sm">Technologie rotative sans contact avec séchage intelligent.</p></div><div class="border border-white/10 rounded-2xl p-4 md:p-5"><div class="flex justify-between mb-2 md:mb-3"><h4 class="font-bold text-sm md:text-base">Portique Premium</h4><span class="text-teal-300 text-sm md:text-base">$18k-25k</span></div><p class="text-slate-300 text-xs md:text-sm">Cadre galvanisé anti-corrosion et capacité haut volume.</p></div></div></div>
+          <div class="glass rounded-3xl p-6 md:p-8 relative overflow-hidden"><div class="timeline-line"></div><div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 relative z-10"><div class="text-center"><div class="w-14 h-14 md:w-20 md:h-20 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="factory" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">China Factory</h4></div><div class="text-center"><div class="w-14 h-14 md:w-20 md:h-20 rounded-full bg-cyan-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="ship" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Sea Freight</h4></div><div class="text-center"><div class="w-14 h-14 md:w-20 md:h-20 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="building" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Customs</h4></div><div class="text-center"><div class="w-14 h-14 md:w-20 md:h-20 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="car" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Deployment</h4></div></div><div class="mt-8 md:mt-16 text-slate-300 text-xs md:text-sm"><p>Optimisation douanière via agrément APIX permettant une réduction d'environ 30% des coûts d'importation.</p></div></div>
         </div>
       </div>
     </section>
@@ -857,39 +513,16 @@
     <!-- FINANCIAL -->
     <section id="financial" class="py-16 md:py-24 px-4 md:px-8">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 md:mb-16">
-          <p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Financial Outlook</p>
-          <h2 class="text-3xl md:text-5xl font-black">Financial Projections & Profitability</h2>
-        </div>
-
+        <div class="mb-12 md:mb-16"><p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Financial Outlook</p><h2 class="text-3xl md:text-5xl font-black">Financial Projections & Profitability</h2></div>
         <div class="grid lg:grid-cols-2 gap-8 md:gap-10 mb-8 md:mb-10">
-          <div class="glass rounded-3xl p-6 md:p-8">
-            <h3 class="text-xl md:text-2xl font-bold mb-6">CAPEX Breakdown</h3>
-            <canvas id="capexChart" style="max-height: 300px;"></canvas>
-          </div>
-          <div class="glass rounded-3xl p-6 md:p-8">
-            <h3 class="text-xl md:text-2xl font-bold mb-6">Revenue Projection</h3>
-            <canvas id="revenueChart" style="max-height: 300px;"></canvas>
-          </div>
+          <div class="glass rounded-3xl p-6 md:p-8"><h3 class="text-xl md:text-2xl font-bold mb-6">CAPEX Breakdown</h3><canvas id="capexChart" style="max-height: 300px;"></canvas></div>
+          <div class="glass rounded-3xl p-6 md:p-8"><h3 class="text-xl md:text-2xl font-bold mb-6">Revenue Projection</h3><canvas id="revenueChart" style="max-height: 300px;"></canvas></div>
         </div>
-
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <div class="glass rounded-3xl p-4 md:p-8 text-center">
-            <p class="text-slate-400 mb-2 md:mb-3 text-xs md:text-base">CA Année 1</p>
-            <h3 class="text-xl md:text-4xl font-black">70.2M</h3>
-          </div>
-          <div class="glass rounded-3xl p-4 md:p-8 text-center">
-            <p class="text-slate-400 mb-2 md:mb-3 text-xs md:text-base">EBITDA</p>
-            <h3 class="text-xl md:text-4xl font-black text-teal-300">23.3M</h3>
-          </div>
-          <div class="glass rounded-3xl p-4 md:p-8 text-center">
-            <p class="text-slate-400 mb-2 md:mb-3 text-xs md:text-base">Résultat Net</p>
-            <h3 class="text-xl md:text-4xl font-black">11.3M</h3>
-          </div>
-          <div class="glass rounded-3xl p-4 md:p-8 text-center">
-            <p class="text-slate-400 mb-2 md:mb-3 text-xs md:text-base">ROI</p>
-            <h3 class="text-xl md:text-4xl font-black text-teal-300">37 mois</h3>
-          </div>
+          <div class="glass rounded-3xl p-4 md:p-8 text-center"><p class="text-slate-400 mb-2 md:mb-3 text-xs md:text-base">CA Année 1</p><h3 class="text-xl md:text-4xl font-black">70.2M</h3></div>
+          <div class="glass rounded-3xl p-4 md:p-8 text-center"><p class="text-slate-400 mb-2 md:mb-3 text-xs md:text-base">EBITDA</p><h3 class="text-xl md:text-4xl font-black text-teal-300">23.3M</h3></div>
+          <div class="glass rounded-3xl p-4 md:p-8 text-center"><p class="text-slate-400 mb-2 md:mb-3 text-xs md:text-base">Résultat Net</p><h3 class="text-xl md:text-4xl font-black">11.3M</h3></div>
+          <div class="glass rounded-3xl p-4 md:p-8 text-center"><p class="text-slate-400 mb-2 md:mb-3 text-xs md:text-base">ROI</p><h3 class="text-xl md:text-4xl font-black text-teal-300">37 mois</h3></div>
         </div>
       </div>
     </section>
@@ -897,86 +530,20 @@
     <!-- ROADMAP -->
     <section id="roadmap" class="py-16 md:py-24 px-4 md:px-8 bg-[#09131d]">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 md:mb-16">
-          <p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Execution Timeline</p>
-          <h2 class="text-3xl md:text-5xl font-black">Strategic Deployment Roadmap</h2>
-        </div>
-
-        <div class="relative">
-          <div class="timeline-line top-12"></div>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-4 md:gap-6 relative z-10">
-            <div class="text-center">
-              <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                <i data-lucide="search" class="w-6 h-6 md:w-8 md:h-8"></i>
-              </div>
-              <h4 class="font-bold text-xs md:text-base">Sourcing</h4>
-            </div>
-            <div class="text-center">
-              <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-cyan-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                <i data-lucide="ship" class="w-6 h-6 md:w-8 md:h-8"></i>
-              </div>
-              <h4 class="font-bold text-xs md:text-base">Import</h4>
-            </div>
-            <div class="text-center">
-              <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                <i data-lucide="hammer" class="w-6 h-6 md:w-8 md:h-8"></i>
-              </div>
-              <h4 class="font-bold text-xs md:text-base">Travaux</h4>
-            </div>
-            <div class="text-center">
-              <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                <i data-lucide="settings" class="w-6 h-6 md:w-8 md:h-8"></i>
-              </div>
-              <h4 class="font-bold text-xs md:text-base">Installation</h4>
-            </div>
-            <div class="text-center">
-              <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-cyan-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                <i data-lucide="rocket" class="w-6 h-6 md:w-8 md:h-8"></i>
-              </div>
-              <h4 class="font-bold text-xs md:text-base">Launch</h4>
-            </div>
-            <div class="text-center">
-              <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                <i data-lucide="users" class="w-6 h-6 md:w-8 md:h-8"></i>
-              </div>
-              <h4 class="font-bold text-xs md:text-base">Client Growth</h4>
-            </div>
-            <div class="text-center">
-              <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4">
-                <i data-lucide="trending-up" class="w-6 h-6 md:w-8 md:h-8"></i>
-              </div>
-              <h4 class="font-bold text-xs md:text-base">Scaling</h4>
-            </div>
-          </div>
-        </div>
+        <div class="mb-12 md:mb-16"><p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Execution Timeline</p><h2 class="text-3xl md:text-5xl font-black">Strategic Deployment Roadmap</h2></div>
+        <div class="relative"><div class="timeline-line top-12"></div><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-4 md:gap-6 relative z-10"><div class="text-center"><div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="search" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Sourcing</h4></div><div class="text-center"><div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-cyan-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="ship" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Import</h4></div><div class="text-center"><div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="hammer" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Travaux</h4></div><div class="text-center"><div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="settings" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Installation</h4></div><div class="text-center"><div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-cyan-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="rocket" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Launch</h4></div><div class="text-center"><div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="users" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Client Growth</h4></div><div class="text-center"><div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-2 md:mb-4"><i data-lucide="trending-up" class="w-6 h-6 md:w-8 md:h-8"></i></div><h4 class="font-bold text-xs md:text-base">Scaling</h4></div></div></div>
       </div>
     </section>
 
     <!-- RECOMMENDATIONS -->
     <section id="recommendations" class="py-16 md:py-24 px-4 md:px-8">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 md:mb-16">
-          <p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Strategic Recommendations</p>
-          <h2 class="text-3xl md:text-5xl font-black">Key Investment Insights</h2>
-        </div>
-
+        <div class="mb-12 md:mb-16"><p class="text-teal-400 uppercase tracking-[0.3em] text-xs md:text-sm mb-4">Strategic Recommendations</p><h2 class="text-3xl md:text-5xl font-black">Key Investment Insights</h2></div>
         <div class="grid md:grid-cols-2 gap-6 md:gap-8">
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <h3 class="text-xl md:text-2xl font-black mb-3 md:mb-5">Touchless 360° Priority</h3>
-            <p class="text-slate-300 leading-relaxed text-sm md:text-base">Prioriser une machine milieu de gamme Zhengzhou Well-Known afin d'obtenir un équilibre optimal entre amortissement rapide et différenciation premium.</p>
-          </div>
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <h3 class="text-xl md:text-2xl font-black mb-3 md:mb-5">APIX Optimization</h3>
-            <p class="text-slate-300 leading-relaxed text-sm md:text-base">Sécuriser les exonérations fiscales avant tout engagement CAPEX pour préserver la trésorerie et réduire le coût projet.</p>
-          </div>
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <h3 class="text-xl md:text-2xl font-black mb-3 md:mb-5">Digital Payment Infrastructure</h3>
-            <p class="text-slate-300 leading-relaxed text-sm md:text-base">Intégrer Wave et Orange Money comme standards transactionnels afin d'améliorer la fluidité client et la fidélisation.</p>
-          </div>
-          <div class="glass rounded-3xl p-6 md:p-8 card-hover">
-            <h3 class="text-xl md:text-2xl font-black mb-3 md:mb-5">Green Wash Strategy</h3>
-            <p class="text-slate-300 leading-relaxed text-sm md:text-base">Positionner OtoWash comme acteur ESG premium grâce au recyclage biologique et à la conformité environnementale ONAS.</p>
-          </div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><h3 class="text-xl md:text-2xl font-black mb-3 md:mb-5">Touchless 360° Priority</h3><p class="text-slate-300 leading-relaxed text-sm md:text-base">Prioriser une machine milieu de gamme Zhengzhou Well-Known afin d'obtenir un équilibre optimal entre amortissement rapide et différenciation premium.</p></div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><h3 class="text-xl md:text-2xl font-black mb-3 md:mb-5">APIX Optimization</h3><p class="text-slate-300 leading-relaxed text-sm md:text-base">Sécuriser les exonérations fiscales avant tout engagement CAPEX pour préserver la trésorerie et réduire le coût projet.</p></div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><h3 class="text-xl md:text-2xl font-black mb-3 md:mb-5">Digital Payment Infrastructure</h3><p class="text-slate-300 leading-relaxed text-sm md:text-base">Intégrer Wave et Orange Money comme standards transactionnels afin d'améliorer la fluidité client et la fidélisation.</p></div>
+          <div class="glass rounded-3xl p-6 md:p-8 card-hover"><h3 class="text-xl md:text-2xl font-black mb-3 md:mb-5">Green Wash Strategy</h3><p class="text-slate-300 leading-relaxed text-sm md:text-base">Positionner OtoWash comme acteur ESG premium grâce au recyclage biologique et à la conformité environnementale ONAS.</p></div>
         </div>
       </div>
     </section>
@@ -984,10 +551,7 @@
     <!-- FOOTER -->
     <footer class="px-4 md:px-8 py-10 md:py-14 border-t border-white/10">
       <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4 md:gap-6">
-        <div class="text-center lg:text-left">
-          <h3 class="font-black text-xl md:text-2xl mb-2">OtoWash</h3>
-          <p class="text-slate-400 text-sm md:text-base">Confidential Strategic Investment Report — Dakar, Sénégal</p>
-        </div>
+        <div class="text-center lg:text-left"><h3 class="font-black text-xl md:text-2xl mb-2">OtoWash</h3><p class="text-slate-400 text-sm md:text-base">Confidential Strategic Investment Report — Dakar, Sénégal</p></div>
         <div class="text-slate-500 text-xs md:text-sm">Designed by SYNESS - May 2026</div>
       </div>
     </footer>
@@ -995,61 +559,85 @@
 </div>
 
 <script>
+  // Initialiser les icônes Lucide
   lucide.createIcons();
 
-  // Fonction pour basculer la sidebar (desktop - collapse)
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    sidebar.classList.toggle('collapsed');
-    mainContent.classList.toggle('sidebar-collapsed');
-    setTimeout(() => lucide.createIcons(), 100);
-  }
+  // ÉLÉMENTS DOM
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+  const collapseDesktopBtn = document.getElementById('collapseDesktopBtn');
+  const mainContent = document.getElementById('mainContent');
+  
+  let isCollapsed = false;
+  let isMobileOpen = false;
 
-  // Fonction pour ouvrir la sidebar (mobile)
+  // Fonction pour ouvrir la sidebar sur mobile
   function openMobileSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.querySelector('.sidebar-overlay');
     sidebar.classList.add('mobile-open');
     overlay.classList.add('active');
-    document.body.classList.add('sidebar-open');
     document.body.style.overflow = 'hidden';
+    isMobileOpen = true;
+    console.log('Sidebar ouverte'); // Debug
   }
 
-  // Fonction pour fermer la sidebar (mobile)
+  // Fonction pour fermer la sidebar sur mobile
   function closeMobileSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.querySelector('.sidebar-overlay');
     sidebar.classList.remove('mobile-open');
     overlay.classList.remove('active');
-    document.body.classList.remove('sidebar-open');
     document.body.style.overflow = '';
-    
-    // Rafraîchir les icônes
-    setTimeout(() => lucide.createIcons(), 100);
+    isMobileOpen = false;
+    console.log('Sidebar fermée'); // Debug
   }
 
-  // Initialisation : vérifier si on est en mode desktop
-  if (window.innerWidth >= 1024) {
-    document.getElementById('mainContent').classList.remove('sidebar-collapsed');
-  } else {
-    document.getElementById('sidebar').classList.remove('collapsed');
+  // Événements pour mobile
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', openMobileSidebar);
+  }
+  
+  if (closeSidebarBtn) {
+    closeSidebarBtn.addEventListener('click', closeMobileSidebar);
+  }
+  
+  if (overlay) {
+    overlay.addEventListener('click', closeMobileSidebar);
   }
 
-  // Gérer le redimensionnement de la fenêtre
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      if (window.innerWidth >= 1024) {
-        // En mode desktop, fermer le mobile-open si ouvert
-        if (document.getElementById('sidebar').classList.contains('mobile-open')) {
-          closeMobileSidebar();
-        }
-        document.body.style.overflow = '';
+  // Fermer la sidebar quand on clique sur un lien (mobile)
+  document.querySelectorAll('[data-link="true"]').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        closeMobileSidebar();
       }
-      lucide.createIcons();
-    }, 250);
+    });
+  });
+
+  // Desktop collapse
+  if (collapseDesktopBtn) {
+    collapseDesktopBtn.addEventListener('click', () => {
+      isCollapsed = !isCollapsed;
+      if (isCollapsed) {
+        sidebar.classList.add('collapsed');
+        mainContent.classList.add('sidebar-collapsed');
+      } else {
+        sidebar.classList.remove('collapsed');
+        mainContent.classList.remove('sidebar-collapsed');
+      }
+      setTimeout(() => lucide.createIcons(), 100);
+    });
+  }
+
+  // Gérer le redimensionnement
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1025) {
+      // En mode desktop, forcer la fermeture du mobile si ouvert
+      if (isMobileOpen) {
+        closeMobileSidebar();
+      }
+      document.body.style.overflow = '';
+    }
+    setTimeout(() => lucide.createIcons(), 100);
   });
 
   // Reveal Animation
@@ -1068,24 +656,8 @@
   if (marketCtx) {
     new Chart(marketCtx, {
       type: 'bar',
-      data: {
-        labels: ['Toyota', 'Mitsubishi', 'Suzuki', 'Kia', 'Hyundai', 'Ford'],
-        datasets: [{
-          label: 'Part de Marché (%)',
-          data: [33.6, 11.7, 8.4, 6.2, 4.9, 3.6],
-          backgroundColor: ['#14B8A6', '#0F4C5C', '#38BDF8', '#0EA5E9', '#2DD4BF', '#64748B'],
-          borderRadius: 12
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#cbd5e1' }, grid: { display: false } },
-          y: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,.05)' } }
-        }
-      }
+      data: { labels: ['Toyota', 'Mitsubishi', 'Suzuki', 'Kia', 'Hyundai', 'Ford'], datasets: [{ label: 'Part de Marché (%)', data: [33.6, 11.7, 8.4, 6.2, 4.9, 3.6], backgroundColor: ['#14B8A6', '#0F4C5C', '#38BDF8', '#0EA5E9', '#2DD4BF', '#64748B'], borderRadius: 12 }] },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#cbd5e1' }, grid: { display: false } }, y: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,.05)' } } } }
     });
   }
 
@@ -1094,19 +666,8 @@
   if (capexCtx) {
     new Chart(capexCtx, {
       type: 'doughnut',
-      data: {
-        labels: ['Machine', 'Civil Works', 'Water System', 'Logistics', 'Working Capital'],
-        datasets: [{
-          data: [9500000, 12000000, 2000000, 1500000, 5000000],
-          backgroundColor: ['#14B8A6', '#0F4C5C', '#38BDF8', '#2DD4BF', '#64748B'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: { legend: { labels: { color: '#fff', font: { size: window.innerWidth < 768 ? 10 : 12 } } } }
-      }
+      data: { labels: ['Machine', 'Civil Works', 'Water System', 'Logistics', 'Working Capital'], datasets: [{ data: [9500000, 12000000, 2000000, 1500000, 5000000], backgroundColor: ['#14B8A6', '#0F4C5C', '#38BDF8', '#2DD4BF', '#64748B'], borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff', font: { size: window.innerWidth < 768 ? 10 : 12 } } } } }
     });
   }
 
@@ -1115,26 +676,8 @@
   if (revenueCtx) {
     new Chart(revenueCtx, {
       type: 'line',
-      data: {
-        labels: ['Y1', 'Y2', 'Y3', 'Y4'],
-        datasets: [{
-          label: 'CA Projection (M FCFA)',
-          data: [70.2, 92, 118, 145],
-          borderColor: '#14B8A6',
-          backgroundColor: 'rgba(20,184,166,.15)',
-          tension: .4,
-          fill: true
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: { legend: { labels: { color: '#fff' } } },
-        scales: {
-          x: { ticks: { color: '#cbd5e1' }, grid: { display: false } },
-          y: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,.05)' } }
-        }
-      }
+      data: { labels: ['Y1', 'Y2', 'Y3', 'Y4'], datasets: [{ label: 'CA Projection (M FCFA)', data: [70.2, 92, 118, 145], borderColor: '#14B8A6', backgroundColor: 'rgba(20,184,166,.15)', tension: .4, fill: true }] },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff' } } }, scales: { x: { ticks: { color: '#cbd5e1' }, grid: { display: false } }, y: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,.05)' } } } }
     });
   }
 </script>
