@@ -131,11 +131,12 @@
     .sidebar-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.8);
       z-index: 999;
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     .sidebar-overlay.active {
@@ -148,6 +149,8 @@
       .sidebar {
         position: fixed;
         left: -280px;
+        top: 0;
+        height: 100%;
         transform: translateX(0);
       }
       
@@ -160,16 +163,9 @@
         width: 100% !important;
       }
       
-      .sidebar.collapsed {
-        width: 280px;
-      }
-      
-      .sidebar.collapsed.mobile-open {
-        left: 0;
-      }
-      
-      .toggle-sidebar-mobile {
-        display: flex;
+      /* Empêcher le scroll quand la sidebar est ouverte */
+      body.sidebar-open {
+        overflow: hidden;
       }
     }
 
@@ -264,13 +260,11 @@
       radial-gradient(circle at 80% 30%, rgba(245,230,202,.12), transparent 20%);
     }
 
-    /* Responsive charts */
     canvas {
       max-width: 100%;
       height: auto !important;
     }
 
-    /* Ajustements mobiles */
     @media (max-width: 768px) {
       .pricing-popular {
         transform: scale(1);
@@ -296,11 +290,13 @@
       top: 1rem;
       left: 1rem;
       z-index: 1001;
-      background: rgba(20,184,166,0.9);
+      background: rgba(20,184,166,0.95);
       border-radius: 12px;
       padding: 0.5rem;
       cursor: pointer;
       transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px);
     }
 
     .toggle-btn:hover {
@@ -313,13 +309,24 @@
         display: none;
       }
     }
+
+    /* Bouton fermeture dans la sidebar */
+    .close-sidebar-btn {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .close-sidebar-btn {
+        display: block;
+      }
+    }
   </style>
 </head>
 
 <body class="mesh">
 
 <!-- Mobile Toggle Button -->
-<button class="toggle-btn" onclick="toggleMobileSidebar()">
+<button class="toggle-btn" onclick="openMobileSidebar()">
   <i data-lucide="menu"></i>
 </button>
 
@@ -339,10 +346,12 @@
           <p class="text-xs text-slate-400">Strategic Report</p>
         </div>
       </div>
+      <!-- Bouton de fermeture pour desktop (collapse) -->
       <button onclick="toggleSidebar()" class="text-slate-300 hidden lg:block">
         <i data-lucide="panel-left-close"></i>
       </button>
-      <button onclick="closeMobileSidebar()" class="text-slate-300 lg:hidden">
+      <!-- Bouton de fermeture pour mobile (X) -->
+      <button onclick="closeMobileSidebar()" class="close-sidebar-btn text-slate-300 hover:text-white transition">
         <i data-lucide="x"></i>
       </button>
     </div>
@@ -988,6 +997,7 @@
 <script>
   lucide.createIcons();
 
+  // Fonction pour basculer la sidebar (desktop - collapse)
   function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('mainContent');
@@ -996,28 +1006,53 @@
     setTimeout(() => lucide.createIcons(), 100);
   }
 
-  function toggleMobileSidebar() {
+  // Fonction pour ouvrir la sidebar (mobile)
+  function openMobileSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.querySelector('.sidebar-overlay');
     sidebar.classList.add('mobile-open');
     overlay.classList.add('active');
+    document.body.classList.add('sidebar-open');
     document.body.style.overflow = 'hidden';
   }
 
+  // Fonction pour fermer la sidebar (mobile)
   function closeMobileSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.querySelector('.sidebar-overlay');
     sidebar.classList.remove('mobile-open');
     overlay.classList.remove('active');
+    document.body.classList.remove('sidebar-open');
     document.body.style.overflow = '';
+    
+    // Rafraîchir les icônes
+    setTimeout(() => lucide.createIcons(), 100);
   }
 
+  // Initialisation : vérifier si on est en mode desktop
   if (window.innerWidth >= 1024) {
     document.getElementById('mainContent').classList.remove('sidebar-collapsed');
   } else {
     document.getElementById('sidebar').classList.remove('collapsed');
   }
 
+  // Gérer le redimensionnement de la fenêtre
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (window.innerWidth >= 1024) {
+        // En mode desktop, fermer le mobile-open si ouvert
+        if (document.getElementById('sidebar').classList.contains('mobile-open')) {
+          closeMobileSidebar();
+        }
+        document.body.style.overflow = '';
+      }
+      lucide.createIcons();
+    }, 250);
+  });
+
+  // Reveal Animation
   const reveals = document.querySelectorAll('.reveal');
   window.addEventListener('scroll', () => {
     reveals.forEach(r => {
@@ -1102,14 +1137,6 @@
       }
     });
   }
-
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      lucide.createIcons();
-    }, 250);
-  });
 </script>
 </body>
 </html>
